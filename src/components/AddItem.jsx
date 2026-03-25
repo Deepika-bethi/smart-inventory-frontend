@@ -21,7 +21,7 @@ function AddItem() {
     console.log("Sending to backend:", pro); // Debug log
 
     try {
-      const response = await fetch('http://localhost:8080/api/products', {
+      const response = await fetch('http://localhost:8080/api/pro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

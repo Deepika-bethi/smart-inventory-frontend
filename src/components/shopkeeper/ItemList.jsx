@@ -4,7 +4,7 @@ export default function ItemList({ items, setItems, setEditingItem }) {
 
     try {
       // Attempt backend deletion first
-      const resp = await fetch(`http://localhost:8080/api/products/${id}`, { method: 'DELETE' });
+      const resp = await fetch(`http://localhost:8080/api/pro/${id}`, { method: 'DELETE' });
       if (!resp.ok) throw new Error(await resp.text());
 
       setItems(items.filter(item => item.id !== id));

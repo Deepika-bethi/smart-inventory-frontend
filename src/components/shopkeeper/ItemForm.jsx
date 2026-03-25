@@ -44,7 +44,7 @@ export default function ItemForm({ setItems, editingItem, setEditingItem }) {
         setEditingItem(null);
         alert(`✅ ${edited.name} updated!`);
       } else {
-        const response = await fetch('http://localhost:8080/api/products', {
+        const response = await fetch('http://localhost:8080/api/pro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(itemData)
