@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import ProductList from '../components/customer/ProductList';
 import Cart from '../components/customer/Cart';
 
@@ -6,23 +7,19 @@ export default function CustomerShop() {
   const [cart, setCart] = useState([]);
   const [availableProducts, setAvailableProducts] = useState([]);
 
-  // Load from SAME KEY as Shopkeeper ('smartInventoryItems')
+  // Load from API instead of localStorage
   useEffect(() => {
-    console.log('🛒 Customer loading inventory...');
-    const savedItems = localStorage.getItem('smartInventoryItems');
-    if (savedItems) {
-      try {
-        const items = JSON.parse(savedItems);
-        console.log('✅ Customer found items:', items);
-        const inStock = items.filter(item => item.quantity > 0);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+    console.log('🛒 Customer loading products from API...');
+    axios.get('http://localhost:8080/api/products')
+      .then(res => {
+        console.log('✅ Customer API data:', res.data);
+        const inStock = res.data.filter(item => item.quantity > 0);
         setAvailableProducts(inStock);
-      } catch (e) {
-        console.error('Customer load error:', e);
-      }
-    } else {
-      console.log('❌ No inventory found');
-    }
+      })
+      .catch(err => {
+        console.error('❌ Customer API error:', err);
+        setAvailableProducts([]);
+      });
   }, []);
 
   const addToCart = (product) => {
@@ -32,13 +29,13 @@ export default function CustomerShop() {
   };
 
   const refreshStock = () => {
-    console.log('🔄 Refreshing stock...');
-    const savedItems = localStorage.getItem('smartInventoryItems');
-    if (savedItems) {
-      const items = JSON.parse(savedItems);
-      const inStock = items.filter(item => item.quantity > 0);
-      setAvailableProducts(inStock);
-    }
+    console.log('🔄 Refreshing stock from API...');
+    axios.get('http://localhost:8080/api/products')
+      .then(res => {
+        const inStock = res.data.filter(item => item.quantity > 0);
+        setAvailableProducts(inStock);
+      })
+      .catch(err => console.error('Refresh error:', err));
   };
 
   return (

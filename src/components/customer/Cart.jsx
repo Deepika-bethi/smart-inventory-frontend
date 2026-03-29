@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default function Cart({ cart, setCart }) {
   // Remove single item from cart
   const removeFromCart = (index) => {
@@ -15,27 +17,31 @@ export default function Cart({ cart, setCart }) {
     ));
   };
 
-  // Checkout - Update shopkeeper stock
-  const checkout = () => {
+  // Checkout - Update database stock
+  const checkout = async () => {
     if (cart.length === 0) {
       alert('Cart is empty!');
       return;
     }
 
-    let inventory = JSON.parse(localStorage.getItem('smartInventoryItems') || '[]');
-    let total = 0;
-
-    cart.forEach(cartItem => {
-      const shopItem = inventory.find(item => item.id === cartItem.id);
-      if (shopItem) {
-        shopItem.quantity = Math.max(0, shopItem.quantity - (cartItem.qty || 1));
-        total += shopItem.price * (cartItem.qty || 1);
+    try {
+      let total = 0;
+      for (const cartItem of cart) {
+        const updatedProduct = {
+          ...cartItem,
+          quantity: cartItem.quantity - (cartItem.qty || 1)
+        };
+        await axios.put(`http://localhost:8080/api/products/${cartItem.id}`, updatedProduct);
+        total += cartItem.price * (cartItem.qty || 1);
       }
-    });
-
-    localStorage.setItem('smartInventoryItems', JSON.stringify(inventory));
-    alert(`✅ Purchase Complete!\nTotal: ₹${total.toFixed(2)}`);
-    setCart([]);
+      alert(`✅ Purchase Complete!\nTotal: ₹${total.toFixed(2)}`);
+      setCart([]);
+      // Optionally refresh the page or notify parent to refresh products
+      window.location.reload();
+    } catch (err) {
+      console.error('Checkout failed:', err);
+      alert('❌ Checkout failed. Please try again.');
+    }
   };
 
   const total = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);

@@ -47,7 +47,7 @@ function Shopkeeper() {
   
   // LOAD FROM API ONLY (no static data)
   useEffect(() => {
-    axios.get('/api/pro')
+    axios.get('http://localhost:8080/api/products')
       .then(res => {
         console.log('API DATA:', res.data);
         setProducts(res.data);
@@ -64,9 +64,9 @@ function Shopkeeper() {
     };
     
     try {
-      await axios.post('/api/pro', newItem);
+      await axios.post('http://localhost:8080/api/products', newItem);
       // Reload from API
-      const res = await axios.get('/api/pro');
+      const res = await axios.get('http://localhost:8080/api/products');
       setProducts(res.data);
       e.target.reset();
     } catch (err) {
