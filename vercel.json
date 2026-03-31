@@ -1,0 +1,17 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "env": {
+    "VITE_API_URL": "@vite_api_url"
+  },
+  "routes": [
+    {
+      "src": "/(?!.*\\.[^/]+$|_next/static/|_next/image/|favicon.ico).*",
+      "destination": "/index.html",
+      "status": 200
+    }
+  ]
+}
