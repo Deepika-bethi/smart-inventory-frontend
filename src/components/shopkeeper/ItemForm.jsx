@@ -9,7 +9,7 @@ export default function ItemForm({ setItems, editingItem, setEditingItem }) {
   useEffect(() => {
     if (editingItem) {
       console.log('🔄 Editing:', editingItem);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setName(editingItem.name || '');
       setPrice(editingItem.price ? editingItem.price.toString() : '');
       setQuantity(editingItem.quantity ? editingItem.quantity.toString() : '');

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../../services/apiClient';
 
 export default function Cart({ cart, setCart }) {
   // Remove single item from cart
@@ -31,7 +31,7 @@ export default function Cart({ cart, setCart }) {
           ...cartItem,
           quantity: cartItem.quantity - (cartItem.qty || 1)
         };
-        await axios.put(`http://localhost:8080/api/products/${cartItem.id}`, updatedProduct);
+        await apiClient.put(`/api/products/${cartItem.id}`, updatedProduct);
         total += cartItem.price * (cartItem.qty || 1);
       }
       alert(`✅ Purchase Complete!\nTotal: ₹${total.toFixed(2)}`);

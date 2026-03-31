@@ -40,19 +40,20 @@
 
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../../services/apiClient';
 
 function Shopkeeper() {
   const [products, setProducts] = useState([]);
   
   // LOAD FROM API ONLY (no static data)
   useEffect(() => {
-    axios.get('http://localhost:8080/api/products')
+    console.log('📦 Shopkeeper loading products from API...');
+    apiClient.get('/api/products')
       .then(res => {
-        console.log('API DATA:', res.data);
+        console.log('✅ Shopkeeper API DATA:', res.data);
         setProducts(res.data);
       })
-      .catch(err => console.error('API ERROR:', err));
+      .catch(err => console.error('❌ API ERROR:', err));
   }, []);
 
   const addItem = async (e) => {
@@ -64,9 +65,9 @@ function Shopkeeper() {
     };
     
     try {
-      await axios.post('http://localhost:8080/api/products', newItem);
+      await apiClient.post('/api/products', newItem);
       // Reload from API
-      const res = await axios.get('http://localhost:8080/api/products');
+      const res = await apiClient.get('/api/products');
       setProducts(res.data);
       e.target.reset();
     } catch (err) {
